@@ -1,0 +1,50 @@
+TOOL found and replaced ReplacedYmmRegs
+TOOL found ExecutedAtFunc for later PIN_ExecuteAt
+TOOL found DumpYmmRegsAtException for later Exception
+ymm regs at ReplacedYmmRegs
+TOOL in REPLACE_ReplacedYmmRegs
+TOOL Calling replaced ReplacedYmmRegs()
+DumpYmmRegs
+ymm0: acdcacdc:acdcacdc:acdcacdc:acdcacdc:acdcacdc:acdcacdc:acdcacdc:acdcacdc:
+ymm1: acdcacdc:acdcacdc:acdcacdc:acdcacdc:acdcacdc:acdcacdc:acdcacdc:acdcacdc:
+ymm2: acdcacdc:acdcacdc:acdcacdc:acdcacdc:acdcacdc:acdcacdc:acdcacdc:acdcacdc:
+ymm3: acdcacdc:acdcacdc:acdcacdc:acdcacdc:acdcacdc:acdcacdc:acdcacdc:acdcacdc:
+ymm4: acdcacdc:acdcacdc:acdcacdc:acdcacdc:acdcacdc:acdcacdc:acdcacdc:acdcacdc:
+ymm5: acdcacdc:acdcacdc:acdcacdc:acdcacdc:acdcacdc:acdcacdc:acdcacdc:acdcacdc:
+ymm6: acdcacdc:acdcacdc:acdcacdc:acdcacdc:acdcacdc:acdcacdc:acdcacdc:acdcacdc:
+ymm7: acdcacdc:acdcacdc:acdcacdc:acdcacdc:acdcacdc:acdcacdc:acdcacdc:acdcacdc:
+TOOL Returned from replaced ReplacedYmmRegs()
+TOOL Calling ExecutedAtFunc
+DumpYmmRegs
+ymm0: deadbeef:deadbeef:deadbeef:deadbeef:deadbeef:deadbeef:deadbeef:deadbeef:
+ymm1: deadbeef:deadbeef:deadbeef:deadbeef:deadbeef:deadbeef:deadbeef:deadbeef:
+ymm2: deadbeef:deadbeef:deadbeef:deadbeef:deadbeef:deadbeef:deadbeef:deadbeef:
+ymm3: deadbeef:deadbeef:deadbeef:deadbeef:deadbeef:deadbeef:deadbeef:deadbeef:
+ymm4: deadbeef:deadbeef:deadbeef:deadbeef:deadbeef:deadbeef:deadbeef:deadbeef:
+ymm5: deadbeef:deadbeef:deadbeef:deadbeef:deadbeef:deadbeef:deadbeef:deadbeef:
+ymm6: deadbeef:deadbeef:deadbeef:deadbeef:deadbeef:deadbeef:deadbeef:deadbeef:
+ymm7: deadbeef:deadbeef:deadbeef:deadbeef:deadbeef:deadbeef:deadbeef:deadbeef:
+ymm regs before exception
+DumpYmmRegs
+ymm0: a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:
+ymm1: a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:
+ymm2: a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:
+ymm3: a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:
+ymm4: a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:
+ymm5: a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:
+ymm6: a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:
+ymm7: a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:
+TOOL OnException callback
+TOOL CheckAndSetFpContextYmmRegs
+TOOL Checked ctxtFrom OK
+TOOL Checked ctxtTo OK
+next print of ymm regs will be after the tool's OnException function has set their values
+DumpYmmRegs
+ymm0: a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:5a5a5a5a:5a5a5a5a:5a5a5a5a:5a5a5a5a:
+ymm1: a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:5a5a5a5a:5a5a5a5a:5a5a5a5a:5a5a5a5a:
+ymm2: a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:5a5a5a5a:5a5a5a5a:5a5a5a5a:5a5a5a5a:
+ymm3: a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:5a5a5a5a:5a5a5a5a:5a5a5a5a:5a5a5a5a:
+ymm4: a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:5a5a5a5a:5a5a5a5a:5a5a5a5a:5a5a5a5a:
+ymm5: a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:5a5a5a5a:5a5a5a5a:5a5a5a5a:5a5a5a5a:
+ymm6: a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:5a5a5a5a:5a5a5a5a:5a5a5a5a:5a5a5a5a:
+ymm7: a5a5a5a5:a5a5a5a5:a5a5a5a5:a5a5a5a5:5a5a5a5a:5a5a5a5a:5a5a5a5a:5a5a5a5a:
