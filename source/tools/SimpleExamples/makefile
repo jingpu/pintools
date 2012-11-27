@@ -60,7 +60,7 @@ endif
 ##############################################################
 
 TOOL_ROOTS = dcache edgcnt pinatrace trace icount inscount2_mt opcodemix malloctrace calltrace \
-             jumpmix toprtn catmix regmix ilenmix coco get_source_location
+             jumpmix toprtn catmix regmix ilenmix coco get_source_location newtrace
 
 APPS = get_source_app
 
@@ -98,7 +98,8 @@ SANITY_TOOLS = opcodemix$(PINTOOL_SUFFIX)
 # leave out fence, see comment at top of fence.cpp
 
 TEST_TOOLS_ROOTS = dcache edgcnt pinatrace trace icount opcodemix  malloctrace calltrace \
-                   jumpmix toprtn catmix regmix inscount2_mt coco get_source_location
+                   jumpmix toprtn catmix regmix inscount2_mt coco get_source_location \
+		newtrace
 ifeq ($(TARGET),ia32)
     TEST_TOOLS_ROOTS +=  emuload extmix xed-use xed-print ldstmix 
     ifeq (${TARGET_OS},l)

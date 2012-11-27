@@ -41,6 +41,8 @@ END_LEGAL */
 #include "pin.H"
 #include <iostream>
 #include <fstream>
+#include <string>
+#include <map>
 
 /* ===================================================================== */
 /* Names of malloc and free */
@@ -58,13 +60,14 @@ END_LEGAL */
 /* ===================================================================== */
 
 std::ofstream TraceFile;
+std::map<size_t, size_t> size_counter;
 
 /* ===================================================================== */
 /* Commandline Switches */
 /* ===================================================================== */
 
 KNOB<string> KnobOutputFile(KNOB_MODE_WRITEONCE, "pintool",
-    "o", "malloctrace.out", "specify trace file name");
+    "o", "newtrace.out", "specify trace file name");
 
 /* ===================================================================== */
 /* Print Help Message                                                    */
@@ -87,7 +90,7 @@ INT32 Usage()
 
 VOID FreeBefore(ADDRINT retIp, ADDRINT address)
 {
-  TraceFile << "(tool) call to free ("<< reinterpret_cast<void*>(address)<<")"<< endl;
+  TraceFile << "(tool) call to operator delete ("<< reinterpret_cast<void*>(address)<<")"<< endl;
   //	    <<")    will return to "<<reinterpret_cast<void*>(retIp)<< endl;
 }
 /* ===================================================================== */
@@ -99,8 +102,9 @@ void * MallocWrapper( CONTEXT * ctxt, AFUNPTR pf_malloc, size_t size)
 			      CALLINGSTD_DEFAULT,  pf_malloc,
 			      PIN_PARG(void *),  &res, PIN_PARG(size_t), size, PIN_PARG_END());
   
-  TraceFile << "(tool) call to malloc for "<<dec<<size<<" bytes"
+  TraceFile << "(tool) call to operator new for "<<dec<<size<<" bytes"
 	    << "    returns "<<res<< endl;
+  ++size_counter[size];
   return res;  
 }
 
@@ -108,33 +112,37 @@ void * MallocWrapper( CONTEXT * ctxt, AFUNPTR pf_malloc, size_t size)
 
 VOID Image(IMG img, VOID *v)
 {
-    // Instrument the malloc() and free() functions.  Print the input argument
-    // of each malloc() or free(), and the return value of malloc().
-    
-    RTN mallocRtn = RTN_FindByName(img, "malloc");  //  Find the malloc() function.
-    if (RTN_Valid(mallocRtn))
-      {
-        PROTO protoMalloc = PROTO_Allocate( PIN_PARG(void *), CALLINGSTD_DEFAULT,
-					    "malloc", PIN_PARG(size_t), PIN_PARG_END() );
+  // Walk through the symbols in the symbol table.
+  for (SYM sym = IMG_RegsymHead(img); SYM_Valid(sym); sym = SYM_Next(sym)) {
+    string undFuncName = PIN_UndecorateSymbolName(SYM_Name(sym), UNDECORATION_NAME_ONLY);
+    if (undFuncName == "operator new") {//  Find the malloc function.	
+      RTN mallocRtn = RTN_FindByAddress(IMG_LowAddress(img) + SYM_Value(sym));
+	if (RTN_Valid(mallocRtn)) {
+	  PROTO protoMalloc = PROTO_Allocate( PIN_PARG(void *), CALLINGSTD_DEFAULT,
+					      SYM_Name(sym).c_str(), PIN_PARG(size_t), PIN_PARG_END() );
 
-	RTN_ReplaceSignature(mallocRtn, AFUNPTR(MallocWrapper),
-			     IARG_PROTOTYPE, protoMalloc,
-			     IARG_CONST_CONTEXT,
-			     IARG_ORIG_FUNCPTR,
-			     IARG_FUNCARG_ENTRYPOINT_VALUE, 0,
-			     IARG_END);
-      }
+	  RTN_ReplaceSignature(mallocRtn, AFUNPTR(MallocWrapper),
+			       IARG_PROTOTYPE, protoMalloc,
+			       IARG_CONST_CONTEXT,
+			       IARG_ORIG_FUNCPTR,
+			       IARG_FUNCARG_ENTRYPOINT_VALUE, 0,
+			       IARG_END);
+	}
+    }
 
-    RTN freeRtn = RTN_FindByName(img, "free"); // Find the free() function.
-    if (RTN_Valid(freeRtn))
-    {
-        RTN_Open(freeRtn);
-        // Instrument free() to print the input argument value.
-        RTN_InsertCall(freeRtn, IPOINT_BEFORE, (AFUNPTR)FreeBefore,
+    if (undFuncName == "operator delete") {//  Find the malloc function. 
+      RTN freeRtn = RTN_FindByAddress(IMG_LowAddress(img) + SYM_Value(sym));
+      if (RTN_Valid(freeRtn)){
+	    
+	RTN_Open(freeRtn);
+	// Instrument free() to print the input argument value.
+	RTN_InsertCall(freeRtn, IPOINT_BEFORE, (AFUNPTR)FreeBefore,
 		       IARG_RETURN_IP, IARG_FUNCARG_ENTRYPOINT_VALUE, 0,
 		       IARG_END);
-        RTN_Close(freeRtn);
+	RTN_Close(freeRtn);
+      }
     }
+  }
 
 }
 
@@ -142,7 +150,11 @@ VOID Image(IMG img, VOID *v)
 
 VOID Fini(INT32 code, VOID *v)
 {
-    TraceFile.close();
+  TraceFile << "\nsize stat:"<<endl;
+  for(map<size_t, size_t>::iterator it = size_counter.begin();
+      it != size_counter.end(); it++) 
+    TraceFile << it->first <<", "<< it->second <<endl;
+  TraceFile.close();
 }
 
 /* ===================================================================== */

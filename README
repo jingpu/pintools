@@ -23,8 +23,8 @@ use "obj-ia32" instead of "obj-intel64".
 To build and run a sample tool on Linux*:
 
     cd source/tools/SimpleExamples
-    make dir obj-intel64/opcodemix.so
-    ../../../pin -t obj-intel64/opcodemix.so -- /bin/ls
+    make dir obj-intel64/malloctrace.so
+    ../../../pin -t obj-intel64/malloctrace.so -- /bin/ls
 
     This will instrument and run /bin/ls, the output for this tool is in
     opcodemix.out.
